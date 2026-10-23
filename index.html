@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Jakup Jakupi</title>
+    <meta
+      name="description"
+      content="Jakup Jakupi — web developer and IT support specialist based in Skopje, North Macedonia."
+    />
+    <meta name="theme-color" content="#0b0d11" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jakupjakupi.com/" />
+    <meta property="og:title" content="Jakup Jakupi" />
+    <meta property="og:description" content="Web Developer | IT Support Specialist · Skopje, MK" />
+    <meta property="og:image" content="https://jakupjakupi.com/assets/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Icons: .ico for Safari & older browsers, SVG for the rest, PNG for iPhone/iPad.
+         Bump ?v= whenever the icon changes, so browsers drop their cached copy. -->
+    <link rel="icon" href="/favicon.ico?v=3" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Font: JetBrains Mono from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
+    />
+
+    <link rel="stylesheet" href="/style.css?v=5" />
+
+    <!-- Put the saved theme on the page right away, so it doesn't flash in the wrong colours. -->
+    <script>
+      try {
+        var savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.dataset.theme = savedTheme;
+        }
+      } catch (error) {
+        // Some browsers block storage — then the default theme is used.
+      }
+    </script>
+  </head>
+  <body>
+    <!-- Only shown when JavaScript is turned off. -->
+    <noscript>
+      <main class="noscript">
+        <h1>Jakup Jakupi</h1>
+        <p>Web Developer | IT Support Specialist · Skopje, MK</p>
+        <p>
+          <a href="mailto:j@jakupjakupi.com">j@jakupjakupi.com</a> ·
+          <a href="https://www.instagram.com/jwkupp/">instagram</a> ·
+          <a href="https://www.facebook.com/jwkupp">facebook</a>
+        </p>
+        <p>
+          Projects:
+          <a href="https://jako.digital">jako.digital</a> ·
+          <a href="https://ebinterior.mk">ebinterior.mk</a> ·
+          <a href="https://malhad-er.com">malhad-er.com</a> ·
+          <a href="https://isenihausmeister.de">isenihausmeister.de</a> ·
+          <a href="https://jakostore.shop">jakostore.shop</a> ·
+          <a href="https://gentlemanbarber.pro">gentlemanbarber.pro</a> ·
+          <a href="https://jako-inovice.netlify.app">jako-inovice.netlify.app</a> ·
+          <a href="https://jakocv.netlify.app">jakocv.netlify.app</a>
+        </p>
+      </main>
+    </noscript>
+
+    <!-- The React app is drawn inside this box. -->
+    <div id="root"></div>
+
+    <!-- React, then the site (app.js).
+         Bump ?v= on app.js and style.css whenever you upload a new version, so phones drop their cached copy. -->
+    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" defer></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" defer></script>
+    <script src="/app.js?v=7" defer></script>
+  </body>
+</html>

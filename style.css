@@ -1,0 +1,1219 @@
+/*
+ * All the styles for jakupjakupi.com
+ *
+ *   1. Font            5. Title bar        9. Shared pieces
+ *   2. Themes          6. Log              10. Pages
+ *   3. Basics          7. Bottom dock      11. Phones and wide screens
+ *   4. Window          8. ? menu
+ */
+
+/* ── 1. Font ─────────────────────────────────────────────
+ * JetBrains Mono comes from Google Fonts (see index.html), but that version has
+ * no arrows, lines or blocks (← ❯ ─ █ ●). This loads just those characters from the full font.
+ */
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono@2.304/fonts/webfonts/JetBrainsMono-Regular.woff2') format('woff2');
+  unicode-range: U+2190-21FF, U+2500-25FF, U+2700-27BF;
+  font-display: swap;
+}
+
+:root {
+  --line: 22px; /* the height of one line of text */
+  --side: 28px; /* the space on the left and right of the terminal */
+}
+
+/* ── 2. Themes ───────────────────────────────────────────
+ * Every theme sets the same 12 colours:
+ *   bg-alt      title bar, bottom dock and the page behind the window
+ *   bg          the terminal itself
+ *   border      thin lines
+ *   text        normal text, text-muted for less important text, text-dim for the least
+ *   heading     headings
+ *   accent      commands, links and buttons — accent-fg is text on top of the accent colour
+ *   red, green, blue   extra colours
+ *
+ * To add a theme: copy one block, change the name and colours, then add it to `themes` in src/data.js.
+ * (A theme is a [data-theme] attribute, so the theme cards in /themes can each show their own colours.)
+ */
+
+/* dark — the default: amber on ink */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg-alt: #0b0d11;
+  --bg: #101318;
+  --border: #222833;
+  --text: #e8eaf0;
+  --text-muted: #8e97a8;
+  --text-dim: #4f586a;
+  --heading: #c4a7ff;
+  --accent: #ffb547;
+  --accent-fg: #101318;
+  --red: #ff6b6b;
+  --green: #7ee0a1;
+  --blue: #7aa7ff;
+}
+
+/* light — clean white, deep amber */
+[data-theme='light'] {
+  color-scheme: light;
+  --bg-alt: #f3f4f6;
+  --bg: #ffffff;
+  --border: #dfe2e8;
+  --text: #1b1e24;
+  --text-muted: #5a6170;
+  --text-dim: #9aa1ae;
+  --heading: #6a3fd0;
+  --accent: #b45f00;
+  --accent-fg: #ffffff;
+  --red: #d1343f;
+  --green: #1f8a4c;
+  --blue: #2d63d8;
+}
+
+/* ocean — teal on deep sea */
+[data-theme='ocean'] {
+  color-scheme: dark;
+  --bg-alt: #071a20;
+  --bg: #0a222a;
+  --border: #15363f;
+  --text: #dff3f4;
+  --text-muted: #84aeb3;
+  --text-dim: #44707a;
+  --heading: #7fdbe0;
+  --accent: #4fd1c5;
+  --accent-fg: #071a20;
+  --red: #ff8a80;
+  --green: #8ee6a0;
+  --blue: #7cc0ff;
+}
+
+/* forest — vivid green on pine */
+[data-theme='forest'] {
+  color-scheme: dark;
+  --bg-alt: #0a140f;
+  --bg: #0e1a13;
+  --border: #1a2d20;
+  --text: #e3f1e6;
+  --text-muted: #8fb39a;
+  --text-dim: #46684f;
+  --heading: #8de0a6;
+  --accent: #3ddc84;
+  --accent-fg: #0a140f;
+  --red: #ff7b72;
+  --green: #3ddc84;
+  --blue: #79b8ff;
+}
+
+/* rose — pink on plum */
+[data-theme='rose'] {
+  color-scheme: dark;
+  --bg-alt: #1a1018;
+  --bg: #21141f;
+  --border: #352132;
+  --text: #f7e6f0;
+  --text-muted: #c497b0;
+  --text-dim: #7a5270;
+  --heading: #ff9ecb;
+  --accent: #ff7ab6;
+  --accent-fg: #1a1018;
+  --red: #ff6b81;
+  --green: #9fe0a8;
+  --blue: #a0b4ff;
+}
+
+/* coffee — caramel on espresso */
+[data-theme='coffee'] {
+  color-scheme: dark;
+  --bg-alt: #17110d;
+  --bg: #1e1612;
+  --border: #33261e;
+  --text: #f3e7da;
+  --text-muted: #b9a089;
+  --text-dim: #75604f;
+  --heading: #e8c391;
+  --accent: #d9a066;
+  --accent-fg: #17110d;
+  --red: #ec7f6d;
+  --green: #a9c97f;
+  --blue: #95b5d8;
+}
+
+/* sunset — coral on dusk purple */
+[data-theme='sunset'] {
+  color-scheme: dark;
+  --bg-alt: #160f24;
+  --bg: #1c142d;
+  --border: #2f2446;
+  --text: #f5ecfa;
+  --text-muted: #ab9bc6;
+  --text-dim: #66588a;
+  --heading: #ff9f80;
+  --accent: #ff8a5b;
+  --accent-fg: #160f24;
+  --red: #ff6f91;
+  --green: #9be59b;
+  --blue: #9bb0ff;
+}
+
+/* nebula — violet on deep space */
+[data-theme='nebula'] {
+  color-scheme: dark;
+  --bg-alt: #0d0b1a;
+  --bg: #120f22;
+  --border: #241e3b;
+  --text: #ebe7ff;
+  --text-muted: #9a92c4;
+  --text-dim: #544e80;
+  --heading: #8fb7ff;
+  --accent: #a78bfa;
+  --accent-fg: #0d0b1a;
+  --red: #ff7aa2;
+  --green: #86efac;
+  --blue: #8fb7ff;
+}
+
+/* mono — black & white only */
+[data-theme='mono'] {
+  color-scheme: dark;
+  --bg-alt: #0c0c0c;
+  --bg: #121212;
+  --border: #272727;
+  --text: #ededed;
+  --text-muted: #9a9a9a;
+  --text-dim: #575757;
+  --heading: #ffffff;
+  --accent: #f5f5f5;
+  --accent-fg: #121212;
+  --red: #d6d6d6;
+  --green: #f0f0f0;
+  --blue: #dedede;
+}
+
+/* paper — warm sepia light */
+[data-theme='paper'] {
+  color-scheme: light;
+  --bg-alt: #efe9dd;
+  --bg: #f8f4ea;
+  --border: #e0d6c3;
+  --text: #2b2620;
+  --text-muted: #6c6252;
+  --text-dim: #a59a84;
+  --heading: #8a3b12;
+  --accent: #2f6f5e;
+  --accent-fg: #f8f4ea;
+  --red: #b63a2f;
+  --green: #2f6f5e;
+  --blue: #33589e;
+}
+
+/* ── 3. Basics ───────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+/* The page behind the terminal window: a soft glow on top of a dot pattern. */
+body {
+  background: var(--bg-alt); /* for older phones that don't know color-mix() */
+  background:
+    radial-gradient(ellipse 70% 55% at 50% -5%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--text) 8%, transparent) 1px, transparent 0) 0 0 / 22px 22px,
+    var(--bg-alt);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  line-height: var(--line);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased; /* thinner, smoother text on Macs */
+  -webkit-text-size-adjust: 100%; /* stops iPhones from making text bigger when turned sideways */
+  -webkit-tap-highlight-color: transparent; /* no grey flash when tapping on phones */
+}
+
+/* Remove the browser's default spacing and bullets. */
+h2,
+p,
+ul,
+ol,
+dl,
+dd,
+pre {
+  margin: 0;
+  padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+pre,
+button,
+input {
+  font: inherit;
+}
+
+button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Text colours you can put on any element. */
+.accent {
+  color: var(--accent);
+}
+.muted {
+  color: var(--text-muted);
+}
+.dim {
+  color: var(--text-dim);
+}
+.error {
+  color: var(--red);
+}
+
+/* Shown only when JavaScript is turned off. */
+.noscript {
+  padding: 2ch;
+}
+.noscript a {
+  color: var(--accent);
+}
+
+/* Turn off the animations for people who asked their computer for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── 4. Window ───────────────────────────────────────────── */
+
+/* 100dvh is the height you can actually see on phones, without Safari's toolbars.
+   Older browsers that don't know it use 100%. */
+#root {
+  display: flex;
+  height: 100%;
+  height: 100dvh;
+  padding: 28px;
+}
+
+/* The window: title bar on top, the log in the middle (it scrolls), the dock at the bottom. */
+.app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 1240px;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--bg);
+  box-shadow:
+    0 0 0 1px var(--border),
+    0 30px 80px -20px rgb(0 0 0 / 0.55),
+    0 0 140px -50px color-mix(in srgb, var(--accent) 45%, transparent);
+  animation: window-in 0.5s ease-out both;
+}
+
+@keyframes window-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+/* ── 5. Title bar ────────────────────────────────────────── */
+
+/* Three columns: the dots, the title in the middle, the buttons. */
+.titlebar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  height: 42px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  font-size: 12.5px;
+  user-select: none;
+}
+
+.titlebar__dots {
+  display: flex;
+  gap: 8px;
+}
+.titlebar__dots i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+.titlebar__dots i:nth-child(2) {
+  background: #febc2e;
+}
+.titlebar__dots i:nth-child(3) {
+  background: #28c840;
+}
+
+.titlebar__title {
+  display: flex;
+  align-items: center;
+  gap: 0.75ch;
+  overflow: hidden;
+  white-space: nowrap;
+}
+/* My logo in front of the title, the size of an app icon. */
+.titlebar__title .mark {
+  width: 18px;
+  height: 18px;
+}
+
+.titlebar__buttons {
+  display: flex;
+  justify-self: end;
+  gap: 8px;
+}
+
+.titlebar__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75ch;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 1.25ch;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+}
+.titlebar__button:hover {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.titlebar__help {
+  padding: 0;
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 700;
+}
+.titlebar__help:hover {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* ── 6. Log: every command and what it printed is one block ── */
+
+/* The log takes all the space between the title bar and the dock, and scrolls. */
+.log {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.entry {
+  padding: 20px var(--side) 26px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* The newest block is at least as tall as the screen, so it can always scroll to the top. */
+.entry:last-child {
+  min-height: 100%;
+  border-bottom: 0;
+}
+
+/* The line with the command: jakup@portfolio ~ ❯ /about */
+.entry__prompt {
+  overflow-wrap: anywhere;
+}
+
+.prompt-sign {
+  white-space: nowrap;
+}
+.prompt-sign__user {
+  color: var(--green);
+}
+.prompt-sign__path {
+  color: var(--blue);
+}
+.prompt-sign__arrow {
+  color: var(--accent);
+}
+
+/* What the command printed. It slides in after a short wait (--delay, set in App.jsx). */
+.entry__output {
+  display: grid;
+  gap: 16px;
+  animation: slide-in 0.45s ease-out both;
+  animation-delay: var(--delay);
+}
+
+/* Under a command, the output gets a line on its left. */
+.entry__prompt + .entry__output {
+  margin-top: 14px;
+  padding-left: 2ch;
+  border-left: 1px solid var(--border);
+}
+
+/* Keep lines of text short enough to read easily. */
+.entry__output > p,
+.entry__output > dl {
+  max-width: 82ch;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* A clicked command "types itself": its width grows one letter at a time.
+   --letters and --time are set in App.jsx. */
+.typing {
+  display: inline-block;
+  width: calc(var(--letters) * 1ch);
+  overflow: hidden;
+  vertical-align: bottom;
+  white-space: nowrap;
+  animation: typing var(--time) steps(var(--letters)) both;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+}
+
+/* ── 7. Bottom dock: quick commands and the input ──────── */
+
+.dock {
+  display: grid;
+  gap: 10px;
+  /* on iPhones without a home button, stay above the home bar */
+  padding: 12px var(--side) max(14px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: var(--bg-alt);
+}
+
+/* The row of quick commands. On small screens it scrolls sideways. */
+.chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.chip {
+  flex: none;
+  padding: 3px 1.25ch;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-muted);
+  font-size: 12.5px;
+}
+.chip:hover,
+.chip:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+.prompt:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.prompt__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  color: var(--text);
+  caret-color: var(--accent);
+  font-size: 16px; /* 16px or more stops iPhones from zooming in when you tap the input */
+}
+.prompt__input::placeholder {
+  color: var(--text-dim);
+}
+
+/* ── 8. ? menu ───────────────────────────────────────────── */
+
+.help {
+  /* centred on screen — also on old phones that don't know <dialog> */
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  width: min(46ch, 100% - 32px);
+  height: fit-content;
+  max-height: calc(100% - 32px);
+  margin: auto;
+  overflow-y: auto;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-alt);
+  color: var(--text);
+  box-shadow: 0 30px 80px rgb(0 0 0 / 0.45);
+}
+.help:not([open]) {
+  display: none;
+}
+.help[open] {
+  animation: slide-in 0.2s ease-out both;
+}
+/* The dark area behind the menu. */
+.help::backdrop {
+  background: rgb(0 0 0 / 0.45);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.help__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 2ch;
+  border-bottom: 1px solid var(--border);
+}
+
+.help__close {
+  display: flex;
+  padding: 4px;
+  border-radius: 4px;
+  color: var(--text-muted);
+}
+.help__close:hover {
+  color: var(--text);
+}
+
+.help__list {
+  padding: 6px;
+}
+
+/* Each command in the menu: the name, then what it does. */
+.help__item {
+  display: grid;
+  grid-template-columns: 13ch 1fr;
+  width: 100%;
+  padding: 5px 1.5ch;
+  border-radius: 6px;
+}
+.help__item:hover,
+.help__item:focus-visible {
+  outline: none;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.help__foot {
+  padding: 10px 2ch 12px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+}
+
+/* ── 9. Shared pieces ────────────────────────────────────── */
+
+.icon {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  vertical-align: -0.125em;
+}
+
+/* Underlined accent-coloured text: commands you can click, and links. */
+.link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  text-underline-offset: 3px;
+}
+.link:hover {
+  text-decoration-color: var(--accent);
+}
+
+/* A row of buttons or commands. */
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 2ch;
+}
+
+/* Buttons with an icon: outlined, or filled when they are `primary`. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75ch;
+  height: 30px;
+  padding: 0 1.5ch;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 6px;
+  color: var(--accent);
+  vertical-align: top;
+}
+.btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.btn--primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 700;
+}
+.btn--primary:hover {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* "label   value" rows, like a settings file. */
+.info__row {
+  display: grid;
+  grid-template-columns: 12ch 1fr;
+  column-gap: 2ch;
+}
+.info dt {
+  color: var(--text-muted);
+}
+.info dd {
+  overflow-wrap: anywhere;
+}
+
+/* A button inside an info row is smaller, so the row keeps its height. */
+.info .btn {
+  height: var(--line);
+  padding: 0 1ch;
+}
+
+/* My logo: an Enter key, the key in the text colour, its edge and arrow in the background colour.
+   Logo() in src/components.jsx draws it. */
+.mark {
+  flex: none;
+}
+.mark__key {
+  fill: var(--text);
+}
+.mark__line {
+  stroke: var(--bg);
+}
+/* In the title bar it sits on the darker bar colour. */
+.titlebar .mark__line {
+  stroke: var(--bg-alt);
+}
+
+/* A list with › in front of every item. */
+.list li {
+  position: relative;
+  padding-left: 2.5ch;
+}
+.list li::before {
+  content: '›';
+  position: absolute;
+  left: 0.5ch;
+  color: var(--accent);
+}
+
+/* The green "online" dot. It slowly fades in and out. */
+.status-dot {
+  color: var(--green);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ── 10. Pages ───────────────────────────────────────────── */
+
+h2 {
+  color: var(--heading);
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+/* Welcome: my name in block letters next to the info, like `neofetch` */
+
+.fetch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 6ch;
+}
+
+/* The letters are filled with a gradient: the background is clipped to the shape of the text. */
+.logo {
+  font-size: 13px;
+  line-height: 1.32; /* the font's own line height, so the blocks touch each other */
+  background: linear-gradient(120deg, var(--accent) 10%, var(--heading) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.fetch__host {
+  width: fit-content;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--text-dim);
+  font-weight: 700;
+}
+
+.info--fetch .info__row {
+  grid-template-columns: 10ch 1fr;
+}
+.info--fetch dt {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* A row of the theme's colours. */
+.fetch__colors {
+  display: flex;
+  margin-top: 10px;
+}
+.fetch__colors i {
+  width: 3ch;
+  height: 16px;
+}
+.fetch__colors i:nth-child(1) { background: var(--border); }
+.fetch__colors i:nth-child(2) { background: var(--red); }
+.fetch__colors i:nth-child(3) { background: var(--accent); }
+.fetch__colors i:nth-child(4) { background: var(--green); }
+.fetch__colors i:nth-child(5) { background: var(--blue); }
+.fetch__colors i:nth-child(6) { background: var(--heading); }
+.fetch__colors i:nth-child(7) { background: var(--text); }
+
+.lead {
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* /about: my logo, big, next to my name */
+
+.about-head {
+  display: flex;
+  align-items: center;
+  gap: 2.5ch;
+}
+.about-head .mark {
+  width: 104px;
+  height: 104px;
+}
+
+/* /experience: drawn like `git log` — a dot for every job, joined by a dashed line */
+
+.git-log li {
+  position: relative;
+  padding-left: 3ch;
+  padding-bottom: var(--line);
+}
+.git-log li:last-child {
+  padding-bottom: 0;
+}
+.git-log li::before {
+  content: '●';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+.git-log li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 0.55ch;
+  top: var(--line);
+  bottom: 0;
+  border-left: 1px dashed var(--text-dim);
+}
+
+.git-log__hash {
+  color: var(--heading);
+}
+.git-log__branch {
+  color: var(--blue);
+}
+
+/* /education: a folder tree, like `tree` */
+
+.tree__folder {
+  color: var(--blue);
+}
+
+.tree li {
+  position: relative;
+  padding-left: 4ch;
+}
+
+/* Every item gets a "└──" branch, drawn with two borders… */
+.tree li::before {
+  content: '';
+  position: absolute;
+  left: 0.5ch;
+  width: 2.5ch;
+  height: calc(var(--line) / 2);
+  border-left: 1px solid var(--text-dim);
+  border-bottom: 1px solid var(--text-dim);
+}
+
+/* …and every item except the last gets a line down to the next one, so it looks like "├──". */
+.tree li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 0.5ch;
+  top: calc(var(--line) / 2);
+  bottom: 0;
+  border-left: 1px solid var(--text-dim);
+}
+
+/* /skills: drawn like a JSON file */
+
+.json {
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 14px 2ch;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-alt);
+  white-space: nowrap;
+}
+
+/* The { and } around the whole file. */
+.json::before {
+  content: '{';
+  color: var(--text-dim);
+}
+.json::after {
+  content: '}';
+  color: var(--text-dim);
+}
+
+.json__group,
+.json ul {
+  padding-left: 2ch;
+}
+
+.json__key {
+  color: var(--heading);
+}
+
+.json__string {
+  color: var(--green);
+}
+
+/* A comma after every item, except the last one in its list. */
+.json__string:not(:last-child)::after,
+.json__group:not(:last-child) .json__close::after {
+  content: ',';
+  color: var(--text-dim);
+}
+
+/* /languages: name, a 5-step meter, and the level in words */
+
+.meter {
+  display: grid;
+  grid-template-columns: 12ch 7ch 1fr;
+  column-gap: 2ch;
+}
+
+/* /projects: a card for every project */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 14px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-alt);
+  transition: border-color 0.2s, transform 0.2s;
+}
+.card:hover,
+.card:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.card__body {
+  display: grid;
+  padding: 10px 1.5ch 12px;
+  font-size: 12.5px;
+}
+
+.card__name {
+  display: flex;
+  align-items: center;
+  gap: 0.75ch;
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 700;
+}
+.card:hover .card__name {
+  color: var(--accent);
+}
+
+.card__domain {
+  color: var(--red);
+}
+
+.card__type {
+  color: var(--text-muted);
+}
+
+/* Screenshots in the cards and on a project's page. */
+.card img,
+.shot img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.5s;
+}
+.card img {
+  border-bottom: 1px solid var(--border);
+}
+/* Lift and zoom only with a mouse — on phones a tap would leave them stuck. */
+@media (hover: hover) {
+  .card:hover {
+    transform: translateY(-3px);
+  }
+  .card:hover img,
+  .shot:hover img {
+    transform: scale(1.03);
+  }
+}
+
+/* /project <name>: the screenshot and the text, side by side on wide screens */
+
+.project {
+  display: grid;
+  align-items: start;
+  gap: 18px 4ch;
+}
+
+.project__text {
+  display: grid;
+  gap: 14px;
+}
+
+/* The screenshot, framed like a browser window. */
+.shot {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-alt);
+}
+.shot:hover {
+  border-color: var(--accent);
+}
+
+.shot__bar {
+  display: flex;
+  align-items: center;
+  gap: 1.5ch;
+  height: 28px;
+  padding: 0 1.5ch;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.shot__dots {
+  display: flex;
+  gap: 5px;
+}
+.shot__dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+/* /themes: every card is drawn in its own theme's colours */
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+  gap: 10px;
+}
+
+.theme-card {
+  display: block;
+  width: 100%;
+  border-radius: 9px;
+}
+.theme-card:focus-visible {
+  outline: none;
+}
+
+/* The theme you are using now. */
+.theme-card--current {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.theme-card__preview {
+  display: grid;
+  gap: 2px;
+  padding: 10px 1.5ch 12px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--bg);
+  color: var(--text);
+  transition: border-color 0.15s, transform 0.15s;
+}
+.theme-card:hover .theme-card__preview,
+.theme-card:focus-visible .theme-card__preview {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.theme-card__name {
+  display: flex;
+  justify-content: space-between;
+}
+
+.theme-card__colors {
+  display: flex;
+  gap: 3px;
+  margin-top: 8px;
+}
+.theme-card__colors i {
+  flex: 1;
+  height: 6px;
+  border-radius: 2px;
+}
+.theme-card__colors i:nth-child(1) { background: var(--accent); }
+.theme-card__colors i:nth-child(2) { background: var(--heading); }
+.theme-card__colors i:nth-child(3) { background: var(--red); }
+.theme-card__colors i:nth-child(4) { background: var(--green); }
+.theme-card__colors i:nth-child(5) { background: var(--blue); }
+
+/* ── 11. Phones and wide screens ─────────────────────────── */
+
+/* Wide screens: a project's screenshot and text side by side. */
+@media (min-width: 1000px) {
+  .project {
+    grid-template-columns: 1.1fr 1fr;
+  }
+}
+
+/* Phones: the terminal fills the whole screen. */
+@media (max-width: 760px) {
+  :root {
+    --side: 16px;
+  }
+
+  #root {
+    padding: 0;
+  }
+
+  .app {
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+    /* phones turned sideways: keep clear of the notch */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .hide-on-phone {
+    display: none !important;
+  }
+
+  .titlebar {
+    grid-template-columns: 1fr auto;
+  }
+  .titlebar__dots {
+    display: none;
+  }
+
+  /* smaller block letters, so the name fits the screen */
+  .logo {
+    font-size: 3.35vw;
+  }
+
+  .about-head .mark {
+    width: 72px;
+    height: 72px;
+  }
+
+  /* the language level moves under the meter */
+  .meter {
+    grid-template-columns: 12ch 1fr;
+  }
+  .meter__label {
+    grid-column: 1 / -1;
+    padding-left: 2ch;
+    padding-bottom: 11px;
+  }
+}
