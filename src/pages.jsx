@@ -239,7 +239,7 @@ function Projects() {
     <>
       <p>
         Websites I’ve built as a <CommandButton command="/experience">freelance web & WordPress developer</CommandButton> — for
-        local businesses in North Macedonia and Germany, a digital marketplace and a web studio.
+        businesses around the WORLD.
       </p>
       <ul className="cards">
         {projects.map((project) => (
