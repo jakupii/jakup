@@ -3,12 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Jakup Jakupi</title>
+    <title>Jakup Jakupi — Web Developer &amp; IT Support Specialist</title>
     <meta
       name="description"
       content="Jakup Jakupi — web developer and IT support specialist based in Skopje, North Macedonia."
     />
     <meta name="theme-color" content="#0b0d11" />
+    <link rel="canonical" href="https://jakupjakupi.com/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://jakupjakupi.com/" />
@@ -17,7 +18,24 @@
     <meta property="og:image" content="https://jakupjakupi.com/assets/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Jakup Jakupi — Web Developer | IT Support Specialist" />
     <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Tells search engines who this site is about. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Jakup Jakupi",
+        "url": "https://jakupjakupi.com/",
+        "image": "https://jakupjakupi.com/assets/og-image.jpg",
+        "jobTitle": "Web Developer & IT Support Specialist",
+        "address": { "@type": "PostalAddress", "addressLocality": "Skopje", "addressCountry": "MK" },
+        "alumniOf": "Mother Teresa University",
+        "knowsLanguage": ["sq", "en", "mk"],
+        "sameAs": ["https://www.instagram.com/jwkupp/", "https://www.facebook.com/jwkupp"]
+      }
+    </script>
 
     <!-- Icons: .ico for Safari & older browsers, SVG for the rest, PNG for iPhone/iPad.
          Bump ?v= whenever the icon changes, so browsers drop their cached copy. -->
@@ -35,13 +53,14 @@
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap"
     />
 
-    <link rel="stylesheet" href="/style.css?v=5" />
+    <link rel="stylesheet" href="/style.css?v=6" />
 
     <!-- Put the saved theme on the page right away, so it doesn't flash in the wrong colours. -->
     <script>
       try {
         var savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
+        // Only letters, so nothing strange from storage ends up on the page.
+        if (/^[a-z]+$/.test(savedTheme)) {
           document.documentElement.dataset.theme = savedTheme;
         }
       } catch (error) {
@@ -78,9 +97,21 @@
     <div id="root"></div>
 
     <!-- React, then the site (app.js).
+         React comes from the same server as the font's extra characters (one connection less), and
+         `integrity` makes the browser refuse the file if it is ever not exactly React 18.3.1.
          Bump ?v= on app.js and style.css whenever you upload a new version, so phones drop their cached copy. -->
-    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" defer></script>
-    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" defer></script>
-    <script src="/app.js?v=7" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"
+      integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"
+      integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="/app.js?v=8" defer></script>
   </body>
 </html>

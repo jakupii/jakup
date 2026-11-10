@@ -89,7 +89,7 @@ function Help() {
           </InfoRow>
         ))}
       </dl>
-      <p className="dim">Also: /project &lt;name&gt; · /theme &lt;name&gt; · ↑ ↓ for history</p>
+      <p className="dim">Also: /project &lt;name&gt; · /theme &lt;name&gt; · ↑ ↓ for history · Tab to complete</p>
     </>
   );
 }
@@ -239,7 +239,7 @@ function Projects() {
     <>
       <p>
         Websites I’ve built as a <CommandButton command="/experience">freelance web & WordPress developer</CommandButton> — for
-        businesses around the WORLD.
+        businesses around the world.
       </p>
       <ul className="cards">
         {projects.map((project) => (
@@ -307,10 +307,8 @@ function Project({ slug }) {
 
   // The projects before and after this one. After the last project comes the first one again.
   const index = projects.indexOf(project);
-  const isFirst = index === 0;
-  const isLast = index === projects.length - 1;
-  const previous = isFirst ? projects[projects.length - 1] : projects[index - 1];
-  const next = isLast ? projects[0] : projects[index + 1];
+  const previous = projects[(index - 1 + projects.length) % projects.length];
+  const next = projects[(index + 1) % projects.length];
 
   return (
     <>
@@ -384,10 +382,7 @@ function CopyEmailButton() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  if (copied) {
-    return <Button icon="check" onClick={copyEmail}>copied</Button>;
-  }
-  return <Button icon="copy" onClick={copyEmail}>copy</Button>;
+  return <Button icon={copied ? 'check' : 'copy'} onClick={copyEmail}>{copied ? 'copied' : 'copy'}</Button>;
 }
 
 function Contact() {
@@ -474,7 +469,7 @@ function ThemeChanged({ name }) {
 function NotFound({ name }) {
   return (
     <p>
-      <span className="error">command not found: {name}</span> — type <CommandButton command="/help" /> to see all commands.
+      <span className="error">command not found: {name || '/'}</span> — type <CommandButton command="/help" /> to see all commands.
     </p>
   );
 }
@@ -497,6 +492,44 @@ const commandList = [
 
 // The buttons at the bottom of the terminal, to look around without typing.
 const quickCommands = ['about', 'projects', 'experience', 'skills', 'contact', 'themes'];
+
+/**
+ * Finishes a half-typed command when Tab is pressed, like a real terminal:
+ *   "/ab"          → "/about"
+ *   "/project jak" → "/project jako" (as far as all the matches agree)
+ * Gives back the text unchanged when nothing matches.
+ */
+function completeCommand(text) {
+  const words = text.toLowerCase().trimStart().split(/\s+/);
+  const name = words[0].replace('/', '');
+
+  // The second word: a project's slug or a theme's name.
+  if (words.length === 2 && (name === 'project' || name === 'theme')) {
+    const options = name === 'project' ? projects.map((project) => project.slug) : themes.map((theme) => theme.name);
+    const matches = options.filter((option) => option.startsWith(words[1]));
+    return matches.length > 0 ? '/' + name + ' ' + sharedStart(matches) : text;
+  }
+
+  // The first word: the command itself.
+  if (words.length === 1 && name !== '') {
+    const options = [...commandList.map((command) => command.name), 'theme', 'project'];
+    const matches = options.filter((option) => option.startsWith(name));
+    return matches.length > 0 ? '/' + sharedStart(matches) : text;
+  }
+
+  return text;
+}
+
+/** The letters a list of words all start with, e.g. sharedStart(['theme', 'themes']) → 'theme' */
+function sharedStart(words) {
+  let start = words[0];
+  for (const word of words) {
+    while (!word.startsWith(start)) {
+      start = start.slice(0, -1);
+    }
+  }
+  return start;
+}
 
 /**
  * What a command prints.

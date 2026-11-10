@@ -1,0 +1,11 @@
+{
+  "name": "jakupjakupi.com",
+  "private": true,
+  "scripts": {
+    "build": "cat src/data.js src/components.jsx src/pages.jsx src/App.jsx | esbuild --loader=jsx --minify --charset=utf8 --format=iife --banner='/* Built from the .jsx files in src/ with npm run build. Do not edit by hand. */' > app.js",
+    "start": "npx --yes serve ."
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}

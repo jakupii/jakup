@@ -56,7 +56,7 @@ const projects = [
     category: 'Web & branding studio',
     summary: 'Website for JakoDigital — a studio for web development, WordPress development and branding.',
     description:
-      'A dark, editorial site that opens with an animated 3D logo',
+      'A dark, editorial site that opens with an animated 3D logo.',
     highlights: [
       'Web development — custom builds, performance, technical SEO and accessibility',
       'WordPress development — custom themes, Gutenberg blocks, WooCommerce and migrations',

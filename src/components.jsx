@@ -64,7 +64,7 @@ function Icon({ name }) {
 
 /**
  * My logo: an Enter key. It is drawn in the theme's text and background colours (see .mark in style.css),
- * so it is white on dark themes and black on light ones. The files for other uses are in the logo folder.
+ * so it is white on dark themes and black on light ones.
  * `small` leaves out the thin line around the key, so it stays sharp at icon size (like the favicon).
  */
 function Logo({ small }) {
@@ -93,15 +93,10 @@ function Logo({ small }) {
 
 /** A link. Links to other websites (https://…) open in a new tab. */
 function Link({ href, className = 'link', children }) {
-  if (href.startsWith('http')) {
-    return (
-      <a className={className} href={href} target="_blank" rel="noopener noreferrer">
-        {children}
-      </a>
-    );
-  }
+  const external = href.startsWith('http');
+
   return (
-    <a className={className} href={href}>
+    <a className={className} href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
       {children}
     </a>
   );

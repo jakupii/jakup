@@ -10,6 +10,12 @@ const TYPING_SPEED = 40; // milliseconds per letter, when a clicked command "typ
 // Phones and tablets: there, focusing the input would pop up the keyboard.
 const isTouchScreen = window.matchMedia('(pointer: coarse)').matches;
 
+// People who asked their computer for less motion get no smooth scrolling.
+const prefersLessMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// The pages that get their own link, e.g. jakupjakupi.com/#/about
+const LINKABLE_PAGES = ['about', 'projects', 'experience', 'education', 'skills', 'languages', 'contact'];
+
 // Every block in the log needs its own id, so React can tell them apart.
 let nextEntryId = 1;
 
@@ -19,14 +25,21 @@ let nextEntryId = 1;
  *   "#/projects/jakostore" → "/project jakostore"
  */
 function commandFromUrl() {
-  const parts = window.location.hash.split('/'); // "#/projects/jakostore" → ["#", "projects", "jakostore"]
+  let hash = window.location.hash;
+  try {
+    hash = decodeURIComponent(hash);
+  } catch (error) {
+    // A broken link (like "#/%") — use it as it is.
+  }
+
+  const parts = hash.toLowerCase().split('/'); // "#/projects/jakostore" → ["#", "projects", "jakostore"]
   const page = parts[1];
   const slug = parts[2];
 
   if (!page) {
     return '';
   }
-  if (page === 'projects' && slug) {
+  if ((page === 'projects' || page === 'project') && slug) {
     return '/project ' + slug;
   }
   return '/' + page;
@@ -34,16 +47,21 @@ function commandFromUrl() {
 
 /** Shows the current page in the address bar and the tab title, so the link can be shared. */
 function updateUrl(name, argument) {
-  const pages = ['about', 'projects', 'experience', 'education', 'skills', 'languages', 'contact'];
+  const project = name === 'project' && findProject(argument);
 
-  if (name === 'project' && findProject(argument)) {
-    window.history.replaceState(null, '', '#/projects/' + argument);
-    document.title = argument + ' ~ ' + profile.name;
-  }
-  if (pages.includes(name)) {
+  if (project) {
+    window.history.replaceState(null, '', '#/projects/' + project.slug);
+    document.title = project.name + ' ~ ' + profile.name;
+  } else if (LINKABLE_PAGES.includes(name)) {
     window.history.replaceState(null, '', '#/' + name);
     document.title = name + ' ~ ' + profile.name;
   }
+}
+
+/** Takes the page out of the address bar again, when the screen is cleared. */
+function resetUrl() {
+  window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  document.title = profile.name;
 }
 
 /** The theme picked on an earlier visit. (index.html already put it on the page as data-theme.) */
@@ -121,13 +139,16 @@ function App() {
     }
 
     // Split "/project jakostore" into the name "project" and the argument "jakostore".
-    const words = commandText.toLowerCase().split(' ').filter((word) => word !== '');
+    const words = commandText.toLowerCase().split(/\s+/);
     const name = words[0].replace('/', '');
     const argument = words[1] || '';
 
-    // Remember it, so ↑ and ↓ can bring it back.
-    pastCommands.current.push(commandText);
-    pastIndex.current = pastCommands.current.length;
+    // Remember it, so ↑ and ↓ can bring it back. (Not twice in a row.)
+    const past = pastCommands.current;
+    if (past[past.length - 1] !== commandText) {
+      past.push(commandText);
+    }
+    pastIndex.current = past.length;
 
     // Close the ? menu, in case the command was clicked there.
     closeHelp();
@@ -144,6 +165,7 @@ function App() {
 
     if (name === 'clear') {
       setEntries([]);
+      resetUrl();
       return;
     }
 
@@ -157,7 +179,7 @@ function App() {
       output: getOutput(name, argument),
       animate: source === 'click',
     };
-    nextEntryId = nextEntryId + 1;
+    nextEntryId += 1;
     // (entries) => … always adds to the newest log, even when two commands run right after each other.
     setEntries((entries) => [...entries, newEntry]);
     updateUrl(name, argument);
@@ -178,18 +200,28 @@ function App() {
     runCommand(draft, 'keyboard');
   }
 
-  // ↑ and ↓ bring back commands you ran before, like in a real terminal.
+  // Like in a real terminal: ↑ and ↓ bring back commands you ran before,
+  // Tab finishes a half-typed command, and Ctrl+L clears the screen.
   function handleKeyDown(event) {
     const past = pastCommands.current;
     if (event.key === 'ArrowUp' && pastIndex.current > 0) {
       event.preventDefault();
-      pastIndex.current = pastIndex.current - 1;
+      pastIndex.current -= 1;
       setDraft(past[pastIndex.current]);
     }
     if (event.key === 'ArrowDown' && pastIndex.current < past.length) {
       event.preventDefault();
-      pastIndex.current = pastIndex.current + 1;
+      pastIndex.current += 1;
       setDraft(past[pastIndex.current] || '');
+    }
+    // With an empty input, Tab still moves to the next button as usual.
+    if (event.key === 'Tab' && !event.shiftKey && draft.trim() !== '') {
+      event.preventDefault();
+      setDraft(completeCommand(draft));
+    }
+    if (event.key === 'l' && event.ctrlKey) {
+      event.preventDefault();
+      runCommand('/clear', 'keyboard');
     }
   }
 
@@ -222,32 +254,35 @@ function App() {
     }
   }
 
-  // When the page opens with an address like #/about, run that command.
+  // When the page opens with an address like #/about, run that command —
+  // and again when a link like #/projects is opened while the site is already open.
   useEffect(() => {
-    const command = commandFromUrl();
-    if (command !== '') {
-      runCommand(command, 'click');
-    }
-  }, []);
-
-  // When a link like #/projects is opened while the site is already open, run that command too.
-  useEffect(() => {
-    function handleHashChange() {
+    function runCommandFromUrl() {
       const command = commandFromUrl();
       if (command !== '') {
         runCommand(command, 'click');
       }
     }
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
+    runCommandFromUrl();
+    window.addEventListener('hashchange', runCommandFromUrl);
+    return () => window.removeEventListener('hashchange', runCommandFromUrl);
+  }, [runCommand]);
 
-  // When a new block is added, scroll it to the top of the screen.
+  // When a new block is added, scroll it to the top of the screen. (Not the welcome screen — it is already there.)
   useEffect(() => {
-    if (lastEntryRef.current) {
-      lastEntryRef.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    if (lastEntryRef.current && entries.length > 1) {
+      lastEntryRef.current.scrollIntoView({ block: 'start', behavior: prefersLessMotion ? 'auto' : 'smooth' });
     }
   }, [entries]);
+
+  // Phones colour their own toolbar with <meta name="theme-color">, so keep it the same as the theme.
+  useEffect(() => {
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--bg-alt').trim();
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta && color) {
+      meta.content = color;
+    }
+  }, [theme]);
 
   // Shared with every component. useMemo keeps the same object until the theme changes,
   // so the pages in the log are only redrawn when they need to be.
@@ -262,7 +297,7 @@ function App() {
             <Logo small /> jakup@portfolio: ~ <span className="dim hide-on-phone">— zsh</span>
           </span>
           <span className="titlebar__buttons">
-            <button type="button" className="titlebar__button" onClick={() => runCommand('/themes', 'click')}>
+            <button type="button" className="titlebar__button" onClick={() => runCommand('/themes', 'click')} aria-label={'Change theme (now: ' + theme + ')'}>
               <Icon name="palette" />
               <span className="hide-on-phone">{theme}</span>
             </button>
@@ -326,7 +361,7 @@ function App() {
               </li>
             ))}
           </ul>
-          <p className="help__foot dim">Type a command and press Enter · ↑ ↓ for history</p>
+          <p className="help__foot dim">Type a command and press Enter · ↑ ↓ for history · Tab to complete</p>
         </dialog>
       </div>
     </TerminalContext.Provider>
